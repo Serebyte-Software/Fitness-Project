@@ -2,63 +2,150 @@
 <html>
 	<head>
 		<title>
-			Running Game
+			Workout Program
 		</title>
+		
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		
+		<style>
+			html {
+				width: 100%;
+				height: 100%;
+			}
+			
+			body {
+				padding: 0px;
+				margin: 0px;
+				width: 100%;
+				height: 100%;
+			}
+			
+			canvas {
+				width: 100%;
+				height: 100%;
+				background: lightgrey;
+			}
+		</style>
 	</head>
 	
 	<body>
-		<h1>
-			Running Game Demo
-		</h1>
+		<canvas id="myCanvas"></canvas>
 	
-		<p id="text"></p>
-		
 		<script>
-			//ask geolocation permission
-			navigator.geolocation.getCurrentPosition(() => {return true;});
-		
-			//get text 
-			var text = document.getElementById("text");
+			//get canvas and context 
+			var canvas = document.getElementById("myCanvas");
+			var ctx = canvas.getContext("2d");
 			
-			//works
+			//set canvas width and height 
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
 			
-			//define global variables 
-			var frameInterval = null;
-			var startPosition = null;
-			var oldPosition = null;
-			var newPosition = null;
-			
-			//get current position and set to start
-			navigator.geolocation.getCurrentPosition((position) => {
-				startPosition = position;
+			//create routine in array 
+			var routine = [
+				//warm up
+				[
+					["Jogging on the spot", 60 * 60 * 2], //excercise, time (frames)
+					["Dynamic stretches", 60 * 60 * 2]
+				],
 				
-				//get current position 
-				console.log(startPosition);
-				text.innerHTML = startPosition;
-				oldPosition = startPosition;
+				//workout
+				[
+					["High knees", 60 * 60],
+					["Squat jumps", 60 * 60],
+					["Mountain climbers", 60 * 60],
+					["Rest", 60 * 60],
+					["Star jumps", 60 * 60],
+					["Sit-ups", 60 * 60],
+					["Tricep dips", 60 * 60],
+					["Rest", 60 * 60],
+					["Press ups", 60 * 60],
+					["Plank", 60 * 60],
+					["Burpees", 60 * 60],
+					["Rest", 60 * 60],
+				],
+				
+				//cool down 
+				[
+					["Walking", 60 * 60 * 3],
+				],
+			];
+			
+			//define variables
+			var workoutReps = 2;
+			var phase = 0;
+			var subPhase = 0;
+			var repsSoFar = 0;
+			var frame = routine[phase][subPhase][1];
+			var end = false;
+			
+			//main loop 
+			function mainLoop(){
+				//clear screen 
+				ctx.clearRect(0,0,canvas.width, canvas.height);
+			
+				//check if end
+				if(end){
+					//draw text 
+					ctx.fillStyle = "green";
+					ctx.textAlign = "center";
+					ctx.font = "40px Arial";
+					ctx.fillText("Workout over. Refresh to restart.", canvas.width / 2, canvas.height / 4);					
+				} else {
+					//draw text 
+					ctx.fillStyle = "green";
+					ctx.textAlign = "center";
+					ctx.font = "40px Arial";
+					ctx.fillText(routine[phase][subPhase][0], canvas.width / 2, canvas.height / 4);
+					
+					//draw bar
+					ctx.fillStyle = "grey";
+					ctx.fillRect(canvas.width / 4, canvas.height / 2, canvas.width / 2, 16);
+					ctx.fillStyle = "lightblue";
+					ctx.fillRect(canvas.width / 4, canvas.height / 2, canvas.width / 2 * (frame / routine[phase][subPhase][1]), 16);
+					
+					//decrease frame 
+					frame --;
+					
+					//move along 
+					if(frame <= 0){
+						//increase sub phase 
+						subPhase ++;
+						
+						//increase phase 
+						if(subPhase >= routine[phase].length){
+							//check if repsSoFar < workoutReps
+							if(phase == 1 && repsSoFar < workoutReps){
+								repsSoFar ++;
+								subPhase = 0;
+							} else {
+								//increment phase
+								phase ++;
+								subPhase = 0;
+							};
+							
+							if(phase >= routine.length){
+								//end 
+								end = true;
+							};
+						};
+						
+						//reset frame 
+						frame = routine[phase][subPhase][1];
+					};
+				};
+				//start main loop 
+				//requestAnimationFrame(mainLoop);
+			};
+			
+			//add resize event listener for window 
+			window.addEventListener("resize", () => {
+				//set canvas width and height 
+				canvas.width = window.innerWidth;
+				canvas.height = window.innerHeight;	
 			});
 			
-			//set move event listener 
-			navigator.geolocation.watchPosition((position) => {
-				// same as above
-				document.getElementById("text").innerHTML = position.coords.latitude + " " + position.coords.longitude;
-			});
-			
-			/*
-			//set refresh interval 
-			frameInterval = window.setInterval(() => {
-				//get new position
-				navigator.geolocation.getCurrentPosition((position) => {
-					//get current position
-					newPosition = position;
-					
-					//calculate the change in distance 
-					
-					
-					text.innerHTML = newPosition.coords.latitude + " " + newPosition.coords.longitude;
-				});
-			}, 1000 / 60);
-			*/
+			//start main loop 
+			setInterval(mainLoop, 1000 / 60);
 		</script>
 	</body>
 </html>
