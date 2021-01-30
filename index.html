@@ -18,6 +18,7 @@
 				margin: 0px;
 				width: 100%;
 				height: 100%;
+				background: lightgrey;
 			}
 			
 			canvas {
@@ -25,15 +26,66 @@
 				height: 100%;
 				background: lightgrey;
 			}
+			
+			h1 {
+				font-family: arial;
+			}
+			
+			h2 {
+				font-family: arial;
+			}
+			
+			h3 {
+				font-family: arial;
+			}
+			
+			h4 {
+				font-family: arial;
+			}
+			
+			p {
+				font-family: arial;
+			}
+			.mainMenu{
+				padding: 100px 0px;
+				text-align: center;
+				width: 100%;
+			};
 		</style>
 	</head>
 	
 	<body>
-		<canvas id="myCanvas"></canvas>
+		<div id="mainMenu" class="mainMenu">
+			<h1>
+				Workout Program
+			</h1>
+			
+			<br/>
+			
+			<h2>
+				Choose Your Workout
+			</h2>
+			
+			<br/>
+			
+			<button onclick="startCardioWorkout()">
+				Start Cardio Workout
+			</button>
+			
+			<br/>
+			
+			<button onclick="startAbsArmsWorkout()">
+				Start Abs and Arms Workout
+			</button>
+		</div>
 	
 		<script>
+			//get main menu 
+			var mainMenu = document.getElementById("mainMenu");
+			
+		
 			//get canvas and context 
-			var canvas = document.getElementById("myCanvas");
+			var canvas = document.createElement("canvas");
 			var ctx = canvas.getContext("2d");
 			
 			//set canvas width and height 
@@ -41,41 +93,14 @@
 			canvas.height = window.innerHeight;
 			
 			//create routine in array 
-			var routine = [
-				//warm up
-				[
-					["Jogging on the spot", 60 * 60 * 2], //excercise, time (frames)
-					["Dynamic stretches", 60 * 60 * 2]
-				],
-				
-				//workout
-				[
-					["High knees", 60 * 60],
-					["Squat jumps", 60 * 60],
-					["Mountain climbers", 60 * 60],
-					["Rest", 60 * 60],
-					["Star jumps", 60 * 60],
-					["Sit-ups", 60 * 60],
-					["Tricep dips", 60 * 60],
-					["Rest", 60 * 60],
-					["Press ups", 60 * 60],
-					["Plank", 60 * 60],
-					["Burpees", 60 * 60],
-					["Rest", 60 * 60],
-				],
-				
-				//cool down 
-				[
-					["Walking", 60 * 60 * 3],
-				],
-			];
+			var routine = [];
 			
 			//define variables
 			var workoutReps = 2;
 			var phase = 0;
 			var subPhase = 0;
 			var repsSoFar = 0;
-			var frame = routine[phase][subPhase][1];
+			var frame = 0;
 			var end = false;
 			
 			//main loop 
@@ -143,9 +168,101 @@
 				canvas.width = window.innerWidth;
 				canvas.height = window.innerHeight;	
 			});
+		
+			//start workout loop 
+			function startWorkoutLoop(){
+				//remove menu division 
+				document.body.removeChild(mainMenu);
+				
+				//remove body padding;
+				document.body.style.padding = "px";
+				
+				//add canvas 
+				document.body.appendChild(canvas);
+				
+				//reset variables
+				workoutReps = 2;
+				phase = 0;
+				subPhase = 0;
+				repsSoFar = 0;
+				frame = routine[phase][subPhase][1];
+				end = false;
 			
-			//start main loop 
-			setInterval(mainLoop, 1000 / 60);
+				//start main loop 
+				setInterval(mainLoop, 1000 / 60);
+			};
+			
+			//start cardio workout 
+			function startCardioWorkout(){
+				//set excercises
+				routine = [
+					//warm up
+					[
+						["Jogging on the spot", 60 * 60 * 2], //excercise, time (frames)
+						["Dynamic stretches", 60 * 60 * 2]
+					],
+					
+					//workout
+					[
+						["Squat-thrusts", 60 * 60],
+						["Star jumps", 60 * 60],
+						["Burpees", 60 * 60],
+						["Rest", 60 * 60],
+						["Mountain climbers", 60 * 60],
+						["Squats", 60 * 60],
+						["Burpees", 60 * 60],
+						["Rest", 60 * 60],
+						["Squats", 60 * 60],
+						["Tuck jumps", 60 * 60],
+						["Plank", 60 * 60],
+						["Rest", 60 * 60],
+					],
+					
+					//cool down 
+					[
+						["Walking", 60 * 60 * 3],
+					],
+				];
+				
+				//start workout loop
+				startWorkoutLoop();
+			};
+			
+			//start abs arms workout 
+			function startAbsArmsWorkout(){
+				//set excercises
+				routine = [
+					//warm up
+					[
+						["Jogging on the spot", 60 * 60 * 2], //excercise, time (frames)
+						["Dynamic stretches", 60 * 60 * 2]
+					],
+					
+					//workout
+					[
+						["Sit-ups", 60 * 60],
+						["Bicep curls", 60 * 60],
+						["Plank", 60 * 60 * 1.5],
+						["Rest", 60 * 60],
+						["Tricep dips", 60 * 60],
+						["Sit-ups", 60 * 60],
+						["Leg raisers", 60 * 60],
+						["Rest", 60 * 60],
+						["Press ups", 60 * 60],
+						["High crunches", 60 * 60],
+						["Low crunches", 60 * 60],
+						["Rest", 60 * 60],
+					],
+					
+					//cool down 
+					[
+						["Walking", 60 * 60 * 3],
+					],
+				];
+				
+				//start workout loop
+				startWorkoutLoop();
+			};
 		</script>
 	</body>
 </html>
