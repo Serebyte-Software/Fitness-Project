@@ -2,266 +2,227 @@
 <html>
 	<head>
 		<title>
-			Workout Program
+			Workout Program Version 4
 		</title>
 		
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		
 		<style>
-			html {
-				width: 100%;
-				height: 100%;
-			}
-			
-			body {
-				padding: 0px;
-				margin: 0px;
-				width: 100%;
-				height: 100%;
-				background: lightgrey;
-			}
-			
-			canvas {
-				width: 100%;
-				height: 100%;
-				background: lightgrey;
-			}
-			
-			h1 {
+			* {
 				font-family: arial;
-			}
-			
-			h2 {
-				font-family: arial;
-			}
-			
-			h3 {
-				font-family: arial;
-			}
-			
-			h4 {
-				font-family: arial;
-			}
-			
-			p {
-				font-family: arial;
-			}
-			.mainMenu{
-				padding: 100px 0px;
 				text-align: center;
-				width: 100%;
-			};
+			}
 		</style>
 	</head>
 	
 	<body>
-		<div id="mainMenu" class="mainMenu">
+		<header>
 			<h1>
 				Workout Program
 			</h1>
+		</header>
+		
+		<section id="mainSection">
+			<div>
+				<h2>
+					Workouts
+				</h2>
+			
+				<button onclick="upperBodyAndCore(upperBodyAndCoreExercises)">
+					Upper Body and Core 1
+				</button>
+			
+				<hr/>
+				
+				<h2>
+					Running
+				</h2>
+				
+				<button onclick="run(runSet1)">
+					Run 1
+				</button>
+			</div>
+		</section>
+		
+		<footer>
+			<br/>
 			
 			<br/>
 			
-			<h2>
-				Choose Your Workout
-			</h2>
-			
 			<br/>
-			
-			<button onclick="startCardioWorkout()">
-				Start Cardio Workout
-			</button>
-			
-			<br/>
-			
-			<button onclick="startAbsArmsWorkout()">
-				Start Abs and Arms Workout
-			</button>
-		</div>
-	
+		
+			Programmed in 2021
+		</footer>
+		
 		<script>
-			//get main menu 
-			var mainMenu = document.getElementById("mainMenu");
-			
+			//set starting date
+			var startingDate = new Date(2021, 5, 7, 5, 30, 0);
 		
-			//get canvas and context 
-			var canvas = document.createElement("canvas");
-			var ctx = canvas.getContext("2d");
+			//get current date
+			var currentDate = new Date();
 			
-			//set canvas width and height 
-			canvas.width = window.innerWidth;
-			canvas.height = window.innerHeight;
+			//get the difference between the date
+			var millisecondsDifference = currentDate.getTime() - startingDate.getTime();
 			
-			//create routine in array 
-			var routine = [];
+			//get the number of days difference
+			var daysDifference = millisecondsDifference / (1000 * 60 * 60 * 24);
 			
-			//define variables
-			var workoutReps = 2;
-			var phase = 0;
-			var subPhase = 0;
-			var repsSoFar = 0;
-			var frame = 0;
-			var end = false;
+			//upper body and core 1 workout
+			var upperBodyAndCoreExercises = [
+				//upper body section
+				
+				//allow 30 seconds rest in between parts
+				
+				//press-ups
+				["Press-ups", 30],
+				["Press-ups", 20],
+				["Press-ups", 10],
+				
+				//bicep curls
+				["Concentration curls (each arm)", 12],
+				["Concentration curls (each arm)", 8],
+				["Concentration curls (each arm)", 6],
+				
+				//tricep dips
+				["Tricep dips", 30],
+				["Tricep dips", 20],
+				["Tricep dips", 10],
+				
+				//above shoulder lifts
+				["Above shoulder lifts", 16],
+				["Above shoulder lifts", 12],
+				["Above shoulder lifts", 8],
+				
+				//bench press
+				["Bench press", 20],
+				["Bench press", 15],
+				["Bench press", 10],
+				
+				//bicycle crunches
+				["Bicycle crunches", 50],
+				["Bicycle crunches", 35],
+				["Bicycle crunches", 20],
+				
+				//leg raises
+				["Leg raises", 30],
+				["Leg raises", 25],
+				["Leg raises", 20],
+				
+				//squats
+				["Squats", 30],
+				["Squats", 25],
+				["Squats", 20],
+			];
 			
-			//main loop 
-			function mainLoop(){
-				//clear screen 
-				ctx.clearRect(0,0,canvas.width, canvas.height);
+			//get mainSection
+			var mainSection = document.getElementById("mainSection");
 			
-				//check if end
-				if(end){
-					//draw text 
-					ctx.fillStyle = "green";
-					ctx.textAlign = "center";
-					ctx.font = "40px Arial";
-					ctx.fillText("Workout over. Refresh to restart.", canvas.width / 2, canvas.height / 4);					
+			//define workout global variables 
+			var workoutIndex = 0;
+			var workoutExercises = [];
+			
+			//upperBodyAndCore1
+			function upperBodyAndCore(exerciseList){
+				//iterate through exercise list
+				
+				//reset workout index
+				workoutIndex = 0;
+				workoutExercises = exerciseList;
+				
+				//display first exercise
+				displayExercise();
+			};
+			
+			//display exercise
+			function displayExercise(){
+				//check if workout index has overrun 
+				if(workoutIndex < workoutExercises.length){
+					//change the innerHTML of the main section
+					mainSection.innerHTML = "<h2>Current exercise:</h2><br/><h3>" + workoutExercises[workoutIndex][0] + " x " + (workoutExercises[workoutIndex][1] + Math.floor(daysDifference / 7)) + "</h3><br/><br/><button onclick=\"rest(30)\">Done?</button>";
 				} else {
-					//draw text 
-					ctx.fillStyle = "green";
-					ctx.textAlign = "center";
-					ctx.font = "40px Arial";
-					ctx.fillText(routine[phase][subPhase][0], canvas.width / 2, canvas.height / 4);
-					
-					//draw bar
-					ctx.fillStyle = "grey";
-					ctx.fillRect(canvas.width / 4, canvas.height / 2, canvas.width / 2, 16);
-					ctx.fillStyle = "lightblue";
-					ctx.fillRect(canvas.width / 4, canvas.height / 2, canvas.width / 2 * (frame / routine[phase][subPhase][1]), 16);
-					
-					//decrease frame 
-					frame --;
-					
-					//move along 
-					if(frame <= 0){
-						//increase sub phase 
-						subPhase ++;
-						
-						//increase phase 
-						if(subPhase >= routine[phase].length){
-							//check if repsSoFar < workoutReps
-							if(phase == 1 && repsSoFar < workoutReps){
-								repsSoFar ++;
-								subPhase = 0;
-							} else {
-								//increment phase
-								phase ++;
-								subPhase = 0;
-							};
-							
-							if(phase >= routine.length){
-								//end 
-								end = true;
-							};
-						};
-						
-						//reset frame 
-						frame = routine[phase][subPhase][1];
-					};
+					//end
+					mainSection.innerHTML = "<h2>Workout Complete!</h2><br/><h3>Well done on completing your workout! :-)</h3><br/><button onclick=\"window.location.reload()\">Return to Menu</button>";
 				};
-				//start main loop 
-				//requestAnimationFrame(mainLoop);
 			};
 			
-			//add resize event listener for window 
-			window.addEventListener("resize", () => {
-				//set canvas width and height 
-				canvas.width = window.innerWidth;
-				canvas.height = window.innerHeight;	
-			});
-		
-			//start workout loop 
-			function startWorkoutLoop(){
-				//remove menu division 
-				document.body.removeChild(mainMenu);
+			//rest 
+			function rest(seconds){
+				//display seconds
+				mainSection.innerHTML = "<h2>Rest</h2><br/><br/><h3>" + seconds + "</h3>";
 				
-				//remove body padding;
-				document.body.style.padding = "px";
-				
-				//add canvas 
-				document.body.appendChild(canvas);
-				
-				//reset variables
-				workoutReps = 2;
-				phase = 0;
-				subPhase = 0;
-				repsSoFar = 0;
-				frame = routine[phase][subPhase][1];
-				end = false;
-			
-				//start main loop 
-				setInterval(mainLoop, 1000 / 60);
+				//set timeout
+				if(seconds > 0){
+					//count down
+					window.setTimeout(()=>{rest(seconds-1)}, 1000);
+				} else {
+					//display next exercise
+					workoutIndex ++;
+					
+					displayExercise();
+				};
 			};
 			
-			//start cardio workout 
-			function startCardioWorkout(){
-				//set excercises
-				routine = [
-					//warm up
-					[
-						["Jogging on the spot", 60 * 60 * 2], //excercise, time (frames)
-						["Dynamic stretches", 60 * 60 * 2]
-					],
-					
-					//workout
-					[
-						["Squat-thrusts", 60 * 60],
-						["Star jumps", 60 * 60],
-						["Burpees", 60 * 60],
-						["Rest", 60 * 60],
-						["Mountain climbers", 60 * 60],
-						["Squats", 60 * 60],
-						["Burpees", 60 * 60],
-						["Rest", 60 * 60],
-						["Squats", 60 * 60],
-						["Tuck jumps", 60 * 60],
-						["Plank", 60 * 60],
-						["Rest", 60 * 60],
-					],
-					
-					//cool down 
-					[
-						["Walking", 60 * 60 * 3],
-					],
-				];
+			//run
+			var runSet1 = [
+				["Walking", 1],
+				["Running", 2],
+				["Walking", 1],
+				["Running", 5],
+				["Walking", 1],
+				["Running", 10],
+				["Walking", 1],
+				["Running", 15],
+			];
+			
+			//global running variables
+			var runIndex = 0;
+			var globalRunSet = [];
+			
+			//run1
+			function run(runSet){
+				//global index
+				runIndex = -1;
+				globalRunSet = runSet;
 				
-				//start workout loop
-				startWorkoutLoop();
+				//start part 1
+				runPart();
 			};
 			
-			//start abs arms workout 
-			function startAbsArmsWorkout(){
-				//set excercises
-				routine = [
-					//warm up
-					[
-						["Jogging on the spot", 60 * 60 * 2], //excercise, time (frames)
-						["Dynamic stretches", 60 * 60 * 2]
-					],
-					
-					//workout
-					[
-						["Sit-ups", 60 * 60],
-						["Bicep curls", 60 * 60],
-						["Plank", 60 * 60 * 1.5],
-						["Rest", 60 * 60],
-						["Tricep dips", 60 * 60],
-						["Sit-ups", 60 * 60],
-						["Leg raisers", 60 * 60],
-						["Rest", 60 * 60],
-						["Press ups", 60 * 60],
-						["High crunches", 60 * 60],
-						["Low crunches", 60 * 60],
-						["Rest", 60 * 60],
-					],
-					
-					//cool down 
-					[
-						["Walking", 60 * 60 * 3],
-					],
-				];
+			//run part
+			function runPart(){
+				//increment run index
+				runIndex ++;
+			
+				//check run index
+				if(runIndex >= globalRunSet.length){
+					//end the run
+					for(let i = 0; i < 3; i++){
+						window.setTimeout(()=>{
+							var bell = new Audio("bellThree.mp3");
+							bell.play();
+						}, i * 500);
+					};
+				} else {
+					//play sound
+					if(globalRunSet[runIndex][0] == "Walking"){
+						//play one bell
+						var bell = new Audio("bellOne.mp3");
+						bell.play();
+					} else {
+						//play three bells
+						var bell = new Audio("bellThree.mp3");
+						bell.play();
+						
+						mainSection.innerHTML = "<h2>Workout Complete!</h2><br/><h3>Well done on completing your run! :-)</h3><br/><button onclick=\"window.location.reload()\">Return to Menu</button>";
+					};
 				
-				//start workout loop
-				startWorkoutLoop();
+					//run part
+					mainSection.innerHTML = "<h2>" + globalRunSet[runIndex][0] +  " - " + runIndex + " out of " + globalRunSet.length + "</h2>";
+					
+					//set timeout
+					window.setTimeout(()=>{
+						//run part
+						runPart();
+					}, globalRunSet[runIndex][1] * 1000 * 60);
+				};
 			};
 		</script>
 	</body>
